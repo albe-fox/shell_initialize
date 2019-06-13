@@ -11,16 +11,28 @@ rpm -qa | grep nginx
 if [ $? -eq 0 ];then
 	yum -y remove nginx
 fi
+if [ ! -f /etc/yum.repos.d/nginx.repo ];then
+        rm -rf /etc/yum.repos.d/nginx.repo
+fi
+#yum install apr --nogpgcheck
 echo <<-EOF >>/etc/yum.repos.d/nginx.repo
 [nginx-stable]
 name=nginx stable repo
-baseurl=http://nginx.org/packages/centos/$releasever/$basearch/
+baseurl=http://nginx.org/packages/centos/\$releasever/\$basearch/
 gpgcheck=1
 enabled=1
 gpgkey=https://nginx.org/keys/nginx_signing.key
 EOF
 yum -y install nginx
+systemctl restart nginx && systemctl enable nginx
+#隐藏默认版本号
 
+#nginx支持php的必要配置
+sed -ri "s/index.html/index.php index.html/g" /etc/nginx/conf.d/default.conf
+sed -ire "29,36 s/#\(.*\)/\1/g" /etc/nginx/conf.d/default.conf
+sed -ire "s/\/scripts/DocumentRoot/g" /etc/nginx/conf.d/default.conf
+sed -ri "31 s/html/\/usr\/share\/nginx\/html/" /etc/nginx/conf.d/default.conf
+systemctl restart nginx
 }
 
 
