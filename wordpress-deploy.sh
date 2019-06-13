@@ -30,7 +30,7 @@ systemctl restart nginx && systemctl enable nginx
 #nginx支持php的必要配置
 sed -ri "s/index.html/index.php index.html/g" /etc/nginx/conf.d/default.conf
 sed -ire "29,36 s/#\(.*\)/\1/g" /etc/nginx/conf.d/default.conf
-sed -ire "s/\/scripts/DocumentRoot/g" /etc/nginx/conf.d/default.conf
+sed -ire "s/\/scripts/\$Document_Root/g" /etc/nginx/conf.d/default.conf
 sed -ri "31 s/html/\/usr\/share\/nginx\/html/" /etc/nginx/conf.d/default.conf
 systemctl restart nginx
 }
@@ -44,6 +44,7 @@ fi
 rpm -Uvh https://mirror.webtatic.com/yum/el7/epel-release.rpm
 rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
 yum -y install php70w php70w-opcache php70w-xml php70w-mcrypt php70w-gd php70w-devel php70w-mysql php70w-intl php70w-mbstring php70w-fpm
+systemctl restart php-fpm && systemctl enable php-fpm
 }
 
 function install_mysql(){
@@ -86,7 +87,7 @@ mv ./wordpress/* /usr/share/nginx/html/
 
 echo "创建数据库"
 systemctl start mysqld
-mysql --login-path=orginal -e "create database wordpress"
+mysql --login-path=orginal -e "create database if not exists wordpress"
 
 echo "准备配置文件"
 cp /usr/share/nginx/html/{wp-config-sample.php,wp-config.php}

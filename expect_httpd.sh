@@ -29,3 +29,5 @@ if [ ! -f $HOME/.ssh/id_rsa ];then
 	create_keygen
 fi
 transfer_ssh 10.0.111.99 "123"
+ssh 10.0.111.99
+yum -y install httpd
