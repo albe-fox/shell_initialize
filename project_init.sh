@@ -10,6 +10,7 @@ function create_login_path(){
 expect <<-EOF
 spawn mysql_config_editor set --login-path=orginal --host=localhost --user='root' -p
 expect "password" { send "$1\r"}
+expect eof
 EOF
 }
 function edit_mysql(){
