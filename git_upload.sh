@@ -9,8 +9,8 @@
 function auto_input(){
 expect <<-EOF
 spawn git push orgin master
-expect "Username" { send "alebdo@foxmail.com"}
-expect "Password" { send "$1"}
+expect "Username" { send "alebdo@foxmail.com\r"}
+expect "Password" { send "$1\r"}
 expect eof
 EOF
 }
