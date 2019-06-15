@@ -5,8 +5,10 @@
 # date: 20190615
 # usage: install redis
 #
+
 wget http://download.redis.io/releases/redis-5.0.4.tar.gz
-tar xf redis-5.0.4.tar -C /opt/
+
+tar xf redis-5.0.4.tar.gz -C /opt/
 cd /opt/redis-5.0.4/
 make -j `lscpu | awk 'NR==4{print $2}'`
 cd src/
@@ -16,4 +18,4 @@ cp /opt/redis-5.0.4/redis.conf /usr/local/redis/conf/
 cd /opt/redis-5.0.4/src/
 cp mkreleasehdr.sh redis-benchmark redis-check-aof redis-cli redis-server redis-sentinel /usr/local/redis/bin/
 sed -ri s/"daemonize no"/"daemonize yes"/g /usr/local/redis/conf/redis.conf
-
+echo "vm.overcommit_memory = 1" >> /etc/sysctl.conf

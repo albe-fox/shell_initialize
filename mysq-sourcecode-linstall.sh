@@ -5,7 +5,14 @@
 #date:20190528
 #usage:installmysql
 
-
+#设置serverid和随机更改uuid
+function unique_server(){
+ip=`ip a | grep inet | awk -F'[ /]+' 'NR==3{print $3}'`
+id=`echo $ip | awk -F'.' '{print $4}'`
+sed -ire '% s/^\(server_id\).*/\1 = $id/g' /etc/my.cnf
+ranuuid=`openssl rand -hex 2`
+sed -ire "/uuid/ s/....$/$ranuuid/g" /usr/local/mysqld/data/auto.cnf
+}
 #获取源码编译包
 wget ftp://10.0.111.99/mysql-5.7.26.bin.tar.xz
 echo "解压到usrlocal下"
@@ -42,6 +49,7 @@ source /etc/profile
 
 echo "启动mysqld"
 echo "skip-grant-tables" >>/etc/my.cnf
+unique_server
 systemctl start mysqld
 mysql -e "use mysql ; update user set authentication_string=password('123') where user='root'"
 sed -ire '/skip-grant/ s/\(.*\)/#\1/' /etc/my.cnf
