@@ -4,6 +4,9 @@
 #email:965846709@qq.com
 #date:20190528
 #usage:installmysql
+
+
+#获取源码编译包
 wget ftp://10.0.111.99/mysql-5.7.26.bin.tar.xz
 echo "解压到usrlocal下"
 tar xf /root/mysql-5.7.26.bin.tar.xz -C /usr/local    #wait
