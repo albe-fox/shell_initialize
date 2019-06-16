@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
-#author:OldFox
-#email:965846709@qq.com
+#author:albedo
+#email:albedo@foxmail.com
 #date:20190528
 #usage:installmysql
 

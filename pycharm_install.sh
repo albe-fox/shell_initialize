@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# author: oldfox
+# author: albedo
 # email: albedo@foxmail.com
 # date: 20190614
 # usage: deploy pycharm

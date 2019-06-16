@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# author: oldfox
+# author: albedo
 # albedo@foxmai.com
 # date: 20190614
 # usage: deploy python3.7

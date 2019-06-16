@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # 
-# author: oldfox
+# author: albedo
 # email: albedo@firefox.com
 # date: 20190605
 # usage: achieve 

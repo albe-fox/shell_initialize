@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# author: oldfox
+# author: albedo
 # email: albedo@foxmail.com
 # date: 20190613
 # usage: 实现自动登录远程主机并安装httpd

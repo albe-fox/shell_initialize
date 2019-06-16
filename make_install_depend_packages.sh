@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# author: oldfox
+# author: albedo
 # email: albedo@foxmail.com
 # date: 20190615
 # usage: intall packages for make install

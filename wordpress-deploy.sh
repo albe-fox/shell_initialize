@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-#author:OldFox
+#author:albedo
 #email:albedo@foxmail.com
 #date:2019/05/30
 #usage:install wordpress in LNMP

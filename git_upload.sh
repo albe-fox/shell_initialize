@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# author: oldfox
+# author: albedo
 # email: albedo@foxmail.com
 # date: 20190613
 # usage: for upload git dir
