@@ -17,7 +17,7 @@ do
 		echo "$ip$i is down"		
 	fi
 }&
-#done 
+done 
 #n=2
 #while ((n<255))
 #do
