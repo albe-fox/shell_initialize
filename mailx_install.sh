@@ -7,9 +7,9 @@
 #
 yum -y install mailx
 cat <<-EOF >>/etc/mail.rc
-set from=albedo@foxmail.com
-set smtp=
-set smtp-auth-user=albedo@foxmail.com
-set smtp-auth-password=
+set from=albedofox@163.com
+set smtp=smtp.163.com
+set smtp-auth-user=albedofox
+set smtp-auth-password=abledo11
 set smtp-auth=login
 EOF
