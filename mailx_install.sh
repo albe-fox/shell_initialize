@@ -10,6 +10,6 @@ cat <<-EOF >>/etc/mail.rc
 set from=albedofox@163.com
 set smtp=smtp.163.com
 set smtp-auth-user=albedofox
-set smtp-auth-password=abledo11
+set smtp-auth-password=
 set smtp-auth=login
 EOF
