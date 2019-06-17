@@ -22,6 +22,8 @@ expect "*password" { send "$2\r" }
 expect eof
 EOF
 }
+
+##main
 if [ ! -f /usr/bin/expect ];then
 	yum -y install expect	
 fi
