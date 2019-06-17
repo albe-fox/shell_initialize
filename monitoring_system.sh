@@ -9,7 +9,6 @@ function warning_mail(){
 Mail="albedo@foxmail.com"
 Date=`date +%F" "%r`
 ip=`ip a | awk -F"[ /]+" 'NR==9{print $3}'`
-date=$DATE
 echo "
 Date: $Date
 Host: $ip
@@ -17,10 +16,10 @@ Problem: $1 utilization $2
 "| mail -s "warning" $Mail
 }
 function moni_cpu(){
-cpu_used=$(vmstat | awk 'NR==3{print$13+$14}')
+cpu_used=$(vmstat | awk 'NR==3{print $13+$14}')
 
 if [ $cpu_used -gt 70 ];then
-	warning_mail "cpu" $cpu_used
+	warning_mail "cpu" $cpu_used%
 fi
 }
 function moni_mem(){
@@ -38,12 +37,15 @@ if [ $disk_tmp -gt 90 ];then
 fi
 }
 function moni_crontab(){
+if [ ! -f /tmp/$1 ];then
+	cp -R ./$1 /tmp/
+fi
+chmod +x /tmp/$1
 crontab -l | grep monitoring_system.sh  &>/dev/null
 if [ $? -ne 0 ];then
-	cp -R ./$1 /tmp/
 	echo "*/1 * * * * /tmp/$1" >>/var/spool/cron/root
 else 
-	sed -ire '50 s/\(\.*\)/#\1/' /tmp/$1
+	sed -ire '52 s/\(\.*\)/#\1/' /tmp/$1
 fi 
 }
 #####main
