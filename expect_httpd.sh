@@ -7,22 +7,24 @@
 #
 function create_keygen(){
 expect <<-EOF
-spain ssh-keygen
-ecpect ':' { send "\r" }
+spawn ssh-keygen
+expect ":" { send "\r" }
+expect ":" { send "\r" }
 expect ":" { send "\r" }
 expect eof
 EOF
 }
 function transfer_ssh(){
+ip=$1
+pawd=$2
 ##传入两个参数，1是ip，2是密码
 expect <<-EOF
-spain ssh-copy-id root@$1
-expect "*yes/no" { send "yes\r" }
-expect "*password" { send "$2\r" }
+spawn ssh-copy-id root@$ip
+#expect "*yes*" { send "yes\r" }
+expect "*password*" { send "$pawd\r" }
 expect eof
 EOF
 }
-
 ##main
 if [ ! -f /usr/bin/expect ];then
 	yum -y install expect	
@@ -30,6 +32,10 @@ fi
 if [ ! -f $HOME/.ssh/id_rsa ];then
 	create_keygen
 fi
-transfer_ssh 10.0.111.99 "123"
-ssh 10.0.111.99
-yum -y install httpd
+for i in `cat ip.txt`
+do
+ip=`echo $i | awk -F":" '{print $1}'`
+passwd=`echo $i | awk -F":" '{print $2}'`
+transfer_ssh $ip $passwd
+done
+#yum -y install httpd

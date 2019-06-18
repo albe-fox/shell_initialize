@@ -41,7 +41,7 @@ if [ ! -f /tmp/$1 ];then
 	cp -R ./$1 /tmp/
 fi
 chmod +x /tmp/$1
-crontab -l | grep monitoring_system.sh  &>/dev/null
+crontab -l | grep $1  &>/dev/null
 if [ $? -ne 0 ];then
 	echo "*/1 * * * * /tmp/$1" >>/var/spool/cron/root
 else 
