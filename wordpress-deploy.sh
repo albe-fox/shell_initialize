@@ -15,7 +15,7 @@ if [ ! -f /etc/yum.repos.d/nginx.repo ];then
         rm -rf /etc/yum.repos.d/nginx.repo
 fi
 #yum install apr --nogpgcheck
-echo <<-EOF >>/etc/yum.repos.d/nginx.repo
+cat <<-EOF >>/etc/yum.repos.d/nginx.repo
 [nginx-stable]
 name=nginx stable repo
 baseurl=http://nginx.org/packages/centos/\$releasever/\$basearch/
@@ -50,7 +50,8 @@ systemctl restart php-fpm && systemctl enable php-fpm
 function install_mysql(){
 #wget ftp://10.0.111.99/mysql-5.7.26.bin.tar.xz
 ##sh mysq-sourcecode-linstall.sh
-yum -y groupinstall "Development Tools"
+#yum -y groupinstall "Development Tools"
+yum -y install wget
 wget https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm
 rpm -ivh mysql80-community-release-el7-1.noarch.rpm
 #修改安装mysql的yum源文件,把安装5.7的源打开, 关闭安装8.0的源
