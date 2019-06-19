@@ -6,7 +6,7 @@
 #usage:install wordpress in LNMP
 #
 
-function intall_nginx(){
+function install_nginx(){
 rpm -qa | grep nginx
 if [ $? -eq 0 ];then
 	yum -y remove nginx
