@@ -37,5 +37,6 @@ do
 ip=`echo $i | awk -F":" '{print $1}'`
 passwd=`echo $i | awk -F":" '{print $2}'`
 transfer_ssh $ip $passwd
+ssh root@$ip "yum -y install httpd"
 done
-#yum -y install httpd
+
