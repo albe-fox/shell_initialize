@@ -131,6 +131,7 @@ echo "安装kafka"
 tar -xf kafka_2.12-2.3.0.tgz -C /opt/
 mkdir -p /kafka/logs
 chmod -R 777 /kafka
+sed -ire "s/\(log\.dirs=\).*$/\1\/kafka\/logs/g" /opt/kafka_2.12-2.3.0/config/server.properties
 sed -ire "s/\(broker.id=\)0/\1$((num-1))/g" /opt/kafka_2.12-2.3.0/config/server.properties
 sed -ire "/#listeners=PLAINTEXT:\/\/:9092/ a\listeners=PLAINTEXT:\/\/elk-$num:9092" /opt/kafka_2.12-2.3.0/config/server.properties
 sed -ire 's/\(zookeeper.connect=\)localhost:2181/\1elk-1:2181,elk-2:2181,elk-3:2181/g' /opt/kafka_2.12-2.3.0/config/server.properties
