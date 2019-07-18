@@ -37,7 +37,7 @@ sed -ire 's/\(^[ ]*enabled:[ ]*\)false$/\1true/' /etc/filebeat/filebeat.yml
 sed -ire 's/\(\/var\/log\/\).*$/\1messages/' /etc/filebeat/filebeat.yml
 echo "
 output.kafka:
-  hosts: [\"elk-1:9092\"]
+  hosts: [\"elk1:9092\"]
   topic: \"filebeat\"
   codec.json:
     pretty: false " >> /etc/filebeat/filebeat.yml
@@ -84,7 +84,7 @@ tar -xf logstash-7.2.0.tar.gz -C /opt/
 echo "
 input {
   kafka {
-    bootstrap_servers => \"elk-$num:9092\"
+    bootstrap_servers => \"elk$num:9092\"
     topics => [\"filebeat\"]
     codec => json
   }
@@ -133,8 +133,8 @@ mkdir -p /kafka/logs
 chmod -R 777 /kafka
 sed -ire "s/\(log\.dirs=\).*$/\1\/kafka\/logs/g" /opt/kafka_2.12-2.3.0/config/server.properties
 sed -ire "s/\(broker.id=\)0/\1$((num-1))/g" /opt/kafka_2.12-2.3.0/config/server.properties
-sed -ire "/#listeners=PLAINTEXT:\/\/:9092/ a\listeners=PLAINTEXT:\/\/elk-$num:9092" /opt/kafka_2.12-2.3.0/config/server.properties
-sed -ire 's/\(zookeeper.connect=\)localhost:2181/\1elk-1:2181,elk-2:2181,elk-3:2181/g' /opt/kafka_2.12-2.3.0/config/server.properties
+sed -ire "/#listeners=PLAINTEXT:\/\/:9092/ a\listeners=PLAINTEXT:\/\/elk$num:9092" /opt/kafka_2.12-2.3.0/config/server.properties
+sed -ire 's/\(zookeeper.connect=\)localhost:2181/\1elk1:2181,elk2:2181,elk3:2181/g' /opt/kafka_2.12-2.3.0/config/server.properties
 nohup /opt/kafka_2.12-2.3.0/bin/kafka-server-start.sh /opt/kafka_2.12-2.3.0/config/server.properties &
 if [ $? -ne 0 ];then
         return 2
