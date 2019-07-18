@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
 # author: albedo
+# email: albedo@foxmail.com
 # date: 20190718
 # usage: temporary install of filebeat+kafka+ELK
 #
