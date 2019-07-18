@@ -63,7 +63,7 @@ bootstrap.memory_lock: false
 network.host: 0.0.0.0
 http.port: 9200
 discovery.seed_hosts: [\"elk1\",\"elk2\",\"elk3\"]
-cluster.initial_master_nodes: [\"node-$num\"] " >>/opt/elasticsearch-7.2.0/config/elasticsearch.yml
+cluster.initial_master_nodes: [\"node-1\"] " >>/opt/elasticsearch-7.2.0/config/elasticsearch.yml
 echo "
 * soft nofile 65536   
 * hard nofile 131072
