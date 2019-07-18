@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 #
 # author: albedo
-# email: albedo@foxmail.com
 # date: 20190718
 # usage: temporary install of filebeat+kafka+ELK
 #
@@ -29,6 +28,7 @@ echo "下载文件..."
 wget ftp://10.0.111.244/ELK/*
 
 function beat_install(){
+echo "安装filebeat"
 rpm -ivh filebeat-7.2.0-x86_64.rpm
 sed -ire 's/\(reload\.enabled:[ ]*\)true$/\1false/g' /etc/filebeat/filebeat.yml
 sed -ire '/^output.elasticsearch/ s/^\(.*$\)/#\1/g' /etc/filebeat/filebeat.yml
@@ -41,6 +41,8 @@ output.kafka:
   topic: \"filebeat\"
   codec.json:
     pretty: false " >> /etc/filebeat/filebeat.yml
+systemctl start filebeat
+systemctl enable filebeat
 }
 function es_install(){
 tar -xf elasticsearch-7.2.0-linux-x86_64.tar.gz -C /opt/
@@ -49,7 +51,8 @@ then
 useradd elk
 fi
 mkdir -p /data/elk/{data,logs}
-chown -R elk.elk /opt/
+chown -R elk.elk /data/elk/
+chown -R elk.elk /opt/elasticsearch-7.0.0/
 echo "
 cluster.name: elk
 node.name: node-$num
@@ -67,9 +70,13 @@ echo "
 * hard nproc 4096 " >>/etc/security/limits.conf
 echo "vm.max_map_count=262144" > /etc/sysctl.conf
 nohup runuser -l elk -c '/opt/elasticsearch-7.2.0/bin/elasticsearch' &
+if [ $? -ne 0 ];then
+        return 2
+fi
 }
 
 function ls_install(){
+echo "安装logstash"
 tar -xf logstash-7.2.0.tar.gz -C /opt/
 echo "
 input {
@@ -98,18 +105,26 @@ output {
 }" >/opt/logstash-7.2.0/config/logstash_kafka.conf
 
 nohup /opt/logstash-7.2.0/bin/logstash -f /opt/logstash-7.2.0/config/logstash_kafka.conf &
+if [ $? -ne 0 ];then
+	return 2
+fi
 }
 
 function kib_install(){
+echo "安装kibana"
 tar -xf kibana-7.2.0-linux-x86_64.tar.gz  -C /opt/
 echo "
 server.port: 5601
 server.host: 0.0.0.0
 elasticsearch.hosts: [\"http://elk1:9200\"] ">>/opt/kibana-7.2.0-linux-x86_64/config/kibana.yml
 nohup /opt/kibana-7.2.0-linux-x86_64/bin/kibana --allow-root &
+if [ $? -ne 0 ];then
+        return 2
+fi
 }
 
 function kaf_install(){
+echo "安装kafka"
 tar -xf kafka_2.12-2.3.0.tgz -C /opt/
 mkdir -p /kafka/logs
 chmod -R 777 /kafka
@@ -117,6 +132,9 @@ sed -ire "s/\(broker.id=\)0/\1$((num-1))/g" /opt/kafka_2.12-2.3.0/config/server.
 sed -ire "/#listeners=PLAINTEXT:\/\/:9092/ a\listeners=PLAINTEXT:\/\/elk-$num:9092" /opt/kafka_2.12-2.3.0/config/server.properties
 sed -ire 's/\(zookeeper.connect=\)localhost:2181/\1elk-1:2181,elk-2:2181,elk-3:2181/g' /opt/kafka_2.12-2.3.0/config/server.properties
 nohup /opt/kafka_2.12-2.3.0/bin/kafka-server-start.sh /opt/kafka_2.12-2.3.0/config/server.properties &
+if [ $? -ne 0 ];then
+        return 2
+fi
 }
 
 es_install
