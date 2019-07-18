@@ -153,8 +153,8 @@ echo "
 tickTime=2000
 initLimit=10
 syncLimit=5
-dataDir=/zookeeper/data
-dataLogDir=/zookeeper/logs
+dataDir=/data/zookeeper/data
+dataLogDir=/data/zookeeper/logs
 clientPort=2181
 server.1=elk-1:2888:3888
 server.2=elk-2:2888:3888
