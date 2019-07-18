@@ -156,9 +156,9 @@ syncLimit=5
 dataDir=/data/zookeeper/data
 dataLogDir=/data/zookeeper/logs
 clientPort=2181
-server.1=elk-1:2888:3888
-server.2=elk-2:2888:3888
-server.3=elk-3:2888:3888 " >/opt/zookeeper-3.4.14/conf/zoo.cfg
+server.1=elk1:2888:3888
+server.2=elk2:2888:3888
+server.3=elk3:2888:3888 " >/opt/zookeeper-3.4.14/conf/zoo.cfg
 echo $num >/data/zookeeper/data/myid
 /opt/zookeeper-3.4.14/bin/zkServer.sh start
 if [ $? -ne 0 ];then
