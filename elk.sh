@@ -25,7 +25,7 @@ echo "192.168.128.142 elk1
 192.168.128.136 elk3" >> /etc/hosts
 
 echo "下载文件..."
-wget ftp://10.0.111.244/ELK/*
+wget ftp://10.0.111.244/ELK/* &>/dev/null
 
 function beat_install(){
 echo "安装filebeat"
@@ -45,8 +45,9 @@ systemctl start filebeat
 systemctl enable filebeat
 }
 function es_install(){
+echo "安装elasticsearch"
 tar -xf elasticsearch-7.2.0-linux-x86_64.tar.gz -C /opt/
-if ! id elk 
+if ! id elk &>/dev/null
 then
 useradd elk
 fi
@@ -69,7 +70,9 @@ echo "
 * soft nproc 2048
 * hard nproc 4096 " >>/etc/security/limits.conf
 echo "vm.max_map_count=262144" > /etc/sysctl.conf
+sysctl -p &>/dev/null
 nohup runuser -l elk -c '/opt/elasticsearch-7.2.0/bin/elasticsearch' &
+
 if [ $? -ne 0 ];then
         return 2
 fi
@@ -137,13 +140,45 @@ if [ $? -ne 0 ];then
 fi
 }
 
-es_install
+function zoo_install(){
+echo "安装zookeeper"
+tar -xf zookeeper-3.4.14.tar.gz  -C /opt/
+mkdir -p /data/zookeeper/{data,logs}
+echo "
+export ZOOKEEPER_HOME=/opt/zookeeper-3.4.14
+export PATH=\$ZOOKEEPER_HOME/bin:\$PATH" >>/etc/profile
+source /etc/profile
+mv /opt/zookeeper-3.4.14/conf/{zoo_sample.cfg,zoo_sample.cfg.bak}
+echo "
+tickTime=2000
+initLimit=10
+syncLimit=5
+dataDir=/zookeeper/data
+dataLogDir=/zookeeper/logs
+clientPort=2181
+server.1=elk-1:2888:3888
+server.2=elk-2:2888:3888
+server.3=elk-3:2888:3888 " >/opt/zookeeper-3.4.14/conf/zoo.cfg
+echo $num >/data/zookeeper/data/myid
+/opt/zookeeper-3.4.14/bin/zkServer.sh start
+if [ $? -ne 0 ];then
+	echo "zook启动失败"
+        return 2
+fi
+}
+
+###main
+es_install 
 if [ $? -ne 0 ];then
 	echo "elasticsearch安装启动失败"
 fi
 ls_install
 if [ $? -ne 0 ];then
          echo "logstash安装启动失败"
+fi
+zoo_install
+if [ $? -ne 0 ];then
+        echo "zookeeper安装失败"
 fi
 kaf_install
 if [ $? -ne 0 ];then
@@ -158,6 +193,16 @@ if [ "$num" = "1" ];then
 	kib_install
 fi
 
-
-
+sleep 5
+array=("elasticsearch" "logstash" "kibana" "kafka" "zookeeper" "filebeat")
+len=${#array[*]}
+for i in $(seq 0 $((len-1)) )
+do
+        n=$(ps aux | grep ${array[$i]} | wc -l)
+        if [ "$((n-1))" = "0" ];then
+                echo "${array[$i]}安装失败"
+        else
+                echo "${array[$i]}安装成功"
+        fi
+done
 
