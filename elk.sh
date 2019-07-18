@@ -52,7 +52,7 @@ useradd elk
 fi
 mkdir -p /data/elk/{data,logs}
 chown -R elk.elk /data/elk/
-chown -R elk.elk /opt/elasticsearch-7.0.0/
+chown -R elk.elk /opt/elasticsearch-7.2.0/
 echo "
 cluster.name: elk
 node.name: node-$num
